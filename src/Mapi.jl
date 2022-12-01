@@ -14,14 +14,20 @@ struct MapiConnection
     socket::TCPSocket
 end
 
-#
-# Main MAPI connect protocol.
-# Establishes a connection, and parses the challenge.
-#
+"""
+Main MAPI connect protocol.
+Establishes a connection, and parses the challenge.
+"""
 function mapi_connect(params)
     socket = Sockets.connect(params.hostname, params.port)
-
     conn = MapiConnection(params, socket)
+
+    authenticate(conn, params)
+
+    return conn
+end
+
+function authenticate(conn, params)
     challenge = get_block(conn)
 
     parsed_challenge = parse_server_challenge(challenge, params)
@@ -30,23 +36,19 @@ function mapi_connect(params)
 
     request_for_authentication = get_block(conn)
 
-    print(request_for_authentication)
+    # Check if we get redirected
     if startswith(request_for_authentication, "^mapi:merovingian:")
-        new_challenge = get_block(conn)
-        new_parsed_challenge = parse_server_challenge(new_challenge, params)
-        put_block(conn, new_parsed_challenge)
+        authenticate(conn, params)
     end
 
-    authenticated = get_block(conn)
-
-    print(authenticated)
-
-    return conn
+    if startswith(request_for_authentication, "!")
+        throw(error(request_for_authentication))
+    end
 end
 
-#
-# Parses the challenge, and generates a response.
-#
+"""
+Parses the challenge, and generates a response.
+"""
 function parse_server_challenge(challenge, params)
     splitted = split(challenge, ":")     
     salt = splitted[1]
