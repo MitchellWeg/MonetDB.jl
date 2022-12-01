@@ -36,14 +36,15 @@ function authenticate(conn, params)
 
     request_for_authentication = get_block(conn)
 
+    if startswith(request_for_authentication, "!")
+        throw(error(request_for_authentication))
+    end
+
     # Check if we get redirected
     if startswith(request_for_authentication, "^mapi:merovingian:")
         authenticate(conn, params)
     end
 
-    if startswith(request_for_authentication, "!")
-        throw(error(request_for_authentication))
-    end
 end
 
 """
