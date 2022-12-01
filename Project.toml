@@ -1,0 +1,8 @@
+name = "MonetDB"
+uuid = "1882e10c-1919-490c-b622-a87720d6c7a2"
+authors = ["MitchellWeg <mitchell.w@live.nl>"]
+version = "0.1.0"
+
+[deps]
+SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+Sockets = "6462fe0b-24de-5631-8697-dd941f90decc"
