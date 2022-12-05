@@ -28,13 +28,13 @@ function mapi_connect(params)
 end
 
 function authenticate(conn, params)
-    challenge = get_block(conn)
+    challenge = get_block(conn)[1]
 
     parsed_challenge = parse_server_challenge(challenge, params)
 
     put_block(conn, parsed_challenge)
 
-    request_for_authentication = get_block(conn)
+    request_for_authentication = get_block(conn)[1]
 
     if startswith(request_for_authentication, "!")
         throw(error(request_for_authentication))
@@ -72,12 +72,26 @@ end
 
 """
 Gets the block, and transforms it into a coherent String.
-TODO: Do something if this is not the last block.
 """
 function get_block(conn)
-    raw_data = readavailable(conn.socket)
+    header = read(conn.socket, 2)
+    data = []
 
-    data  = String(raw_data[3:end])
+    is_last = false
+
+    while !is_last
+        byte_count = header[1] >> 1
+        is_last = Bool(header[1] & 1)
+
+        raw_data = String(get_bytes(conn, byte_count))
+        push!(data, raw_data)
+    end
 
     return data
+end
+
+function get_bytes(conn, limit)
+    raw_data = read(conn.socket, limit)
+
+    return raw_data
 end
