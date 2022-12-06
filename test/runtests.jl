@@ -11,4 +11,14 @@ end
 
 Test.@testset "execute" begin
    conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+   create_1 = MonetDB.execute(conn, "CREATE TABLE test_1(id INT, foo STRING)")
+   insert_1 = MonetDB.execute(conn, "INSERT INTO test_1 VALUES(1, \'I am foo\')")
+   insert_2 = MonetDB.execute(conn, "INSERT INTO test_1 VALUES(2, \'You are bar\')")
+   insert_3 = MonetDB.execute(conn, "INSERT INTO test_1 VALUES(3, \'We are foobar\')")
+   Test.@test size(insert_1) == (1,6)
+
+
+   delete_1 = MonetDB.execute(conn, "DROP TABLE test_1")
+
+   Test.@test_throws "!42S02!SELECT: no such table 'test_1'\n" MonetDB.execute(conn, "SELECT * FROM test_1")
 end
