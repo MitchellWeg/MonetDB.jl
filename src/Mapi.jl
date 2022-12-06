@@ -74,16 +74,17 @@ end
 Gets the block, and transforms it into a coherent String.
 """
 function get_block(conn)
-    header = read(conn.socket, 2)
     data = []
 
     is_last = false
 
     while !is_last
-        byte_count = header[1] >> 1
-        is_last = Bool(header[1] & 1)
+        header = reinterpret(UInt16, read(conn.socket, 2))[1]
+        byte_count = header >> 1
+        is_last = Bool(header & 1)
 
-        raw_data = String(get_bytes(conn, byte_count))
+        raw_bytes = get_bytes(conn, byte_count)
+        raw_data = String(raw_bytes)
         push!(data, raw_data)
     end
 
