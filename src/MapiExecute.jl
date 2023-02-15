@@ -22,27 +22,31 @@ function mapi_execute(conn, stmt)::DataFrame
 
     df = DataFrame()
 
-    if startswith(resp_type, "&1")
-        # Data Response.
-    elseif startswith(resp_type, "&2")
-        values = map(x -> parse(Int, strip(x)), splitted[2:end])
-        names = ["Affected Rows", "Last increment Auto ID", "Query ID", "Query Time (in ms)", "MAL optimizer time", "SQL optimizer time"]
-        df = create_dataframe(values, names)
-    elseif startswith(resp_type, "&3")
-        # Stats Only Response.
+    if !startswith(resp_type, "&1")
+        # Not a data response,
+        # just return an empty DataFrame
+        return df
     end
+    
+    split_on_newline = split(resp[1], '\n')
+    column_names_raw = split(strip(split_on_newline[3][2:end-6]), '\t')
+
+    column_names = map(strip_off_last_comma, column_names_raw)
+
+    data_raw = split_on_newline[6:end-1]
+    data_raw = map(x -> x[2:end-1], data_raw)
+    data_raw = map(x -> split(x[1:end-1], '\t'), data_raw)
+    data = map(x -> map(s -> strip_off_last_comma(strip(s)), x), data_raw)
+
+    df = DataFrame(mapreduce(permutedims, vcat, data), column_names)
 
     return df
 end
 
-function create_dataframe(output, column_names)
-    tups = Pair[]
-
-    for (i, name) in enumerate(column_names)
-        push!(tups, (name => output[i]))
+function strip_off_last_comma(line)
+    if line[end] == ','
+        line = line[1:end-1]
     end
 
-    df = DataFrame(tups)
-
-    return DataFrame(tups)
+    return string(line)
 end
