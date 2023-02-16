@@ -34,10 +34,14 @@ function mapi_execute(conn, stmt)::DataFrame
 
     column_names = map(strip_off_last_comma, column_names_raw)
 
+    col_types = split(strip(split_on_newline[4][2:end-6]), '\t')
+    col_types = map(strip_off_last_comma, col_types)
+
     data_raw = split_on_newline[6:end-1]
     data_raw = map(x -> x[2:end-1], data_raw)
     data_raw = map(x -> split(x[1:end-1], '\t'), data_raw)
     data = map(x -> map(s -> strip_off_last_comma(strip(s)), x), data_raw)
+    data = monetize(data, col_types)
     data = reduce(vcat, data)
 
     mdata = permutedims(reshape(data, length(column_names), :))
