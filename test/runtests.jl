@@ -9,23 +9,21 @@ Test.@testset "authentication" begin
 end
 
 
-# Test.@testset "execute" begin
-#    conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
-#    expected = DataFrame(foo=["1"], bar=["2"])
-#    actual = MonetDB.execute(conn, "SELECT 1 AS \"foo\",2 AS \"bar\"")
+Test.@testset "execute" begin
+   conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+   expected = DataFrame(foo=["1"], bar=["2"])
+   actual = MonetDB.execute(conn, "SELECT 1 AS \"foo\",2 AS \"bar\"")
 
-#    Test.@test expected == actual
-# end
+   Test.@test expected == actual
+end
 
-# Test.@testset "other execute types" begin
-#    conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
-#    expected = DataFrame(foo=["1.0"], bar=["2.5"])
-#    actual = MonetDB.execute(conn, "SELECT 1.0 AS \"foo\",2.5 AS \"bar\"")
+Test.@testset "other execute types" begin
+   conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+   expected = DataFrame(foo=["1.0"], bar=["2.5"])
+   actual = MonetDB.execute(conn, "SELECT 1.0 AS \"foo\",2.5 AS \"bar\"")
 
-#    println(actual)
-
-#    Test.@test expected == actual
-# end
+   Test.@test expected == actual
+end
 
 
 Test.@testset "more execute" begin

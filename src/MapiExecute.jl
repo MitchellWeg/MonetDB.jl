@@ -1,4 +1,5 @@
 include("Mapi.jl")
+include("Monetizer.jl")
 
 using DataFrames
 
@@ -37,8 +38,10 @@ function mapi_execute(conn, stmt)::DataFrame
     data_raw = map(x -> x[2:end-1], data_raw)
     data_raw = map(x -> split(x[1:end-1], '\t'), data_raw)
     data = map(x -> map(s -> strip_off_last_comma(strip(s)), x), data_raw)
+    data = reduce(vcat, data)
 
-    df = DataFrame(mapreduce(permutedims, vcat, data), column_names)
+    mdata = permutedims(reshape(data, length(column_names), :))
+    df = DataFrame(mdata, column_names)
 
     return df
 end
