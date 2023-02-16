@@ -18,6 +18,16 @@ df = MonetDB.execute(conn, "SELECT 1 AS \"foo\",2 AS \"bar\"")
    1 │ 1       2
 ```
 
+### Loading a DataFrame into a table
+
+A DataFrame can be saved into a table:
+
+```julia
+MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+
+MonetDB.load(conn, my_df, "my_table")
+```
+
 ### Transaction
 
 Additionally, a transaction can also be started:

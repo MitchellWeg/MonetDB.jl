@@ -18,6 +18,15 @@ function execute(conn, cmd)
 end
 
 """
+Load a DataFrame into a table.
+"""
+function load(conn, df::DataFrame, table_name)
+    transaction(conn) do 
+        
+    end
+end
+
+"""
 Use a transaction to complete the statement.
 """
 function transaction(f::Function, conn)
