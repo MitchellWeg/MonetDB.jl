@@ -1,5 +1,6 @@
 module MonetDB
 include("Mapi.jl")
+include("Load.jl")
 include("MapiExecute.jl")
 
 """
@@ -19,10 +20,19 @@ end
 
 """
 Load a DataFrame into a table.
+For this, a new table will be created.
 """
 function load(conn, df::DataFrame, table_name)
+    column_names = names(df)
+    column_types = eltype.(eachcol(df))
+    create_table_q = determine_create_table_query(table_name, column_names, column_types)
+
     transaction(conn) do 
-        
+        MonetDB.execute(conn, create_table_q)
+        for row in eachrow(df)
+            q = determine_execute_query(table_name, row)
+            MonetDB.execute(conn, q)
+        end
     end
 end
 

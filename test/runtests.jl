@@ -68,7 +68,7 @@ Test.@testset "execute" begin
       target_df = MLDatasets.Iris().dataframe
       conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
 
-      MonetDB.load(conn, target_df)
+      MonetDB.load(conn, target_df, "foo")
 
    end
 end
