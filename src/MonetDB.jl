@@ -23,7 +23,12 @@ Use a transaction to complete the statement.
 function transaction(f::Function, conn)
     mapi_execute(conn, "start transaction")
 
-    f()
+    try
+        f()
+    catch
+        mapi_execute(conn, "rollback")
+        return
+    end
 
     mapi_execute(conn, "commit")
 end
