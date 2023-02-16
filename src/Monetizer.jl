@@ -11,7 +11,7 @@ function monetize(data, types)
 end
 
 function determine_type(data, type)
-    if type == "decimal"
+    if type in ["decimal", "double"]
         return parse(Float64, data)
     end
     if type == "clob"

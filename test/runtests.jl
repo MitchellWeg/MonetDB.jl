@@ -70,5 +70,9 @@ Test.@testset "execute" begin
 
       MonetDB.load(conn, target_df, "foo")
 
+      df = MonetDB.execute(conn, "SELECT * FROM foo")
+      println(target_df)
+
+      MonetDB.execute(conn, "DROP TABLE foo")
    end
 end
