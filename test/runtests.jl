@@ -22,7 +22,7 @@ Test.@testset "execute" begin
    Test.@testset "more execute" begin
       conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
 
-      create_1 = MonetDB.execute(conn, "CREATE TABLE test_1(id INT, foo STRING)")
+      create_1 = MonetDB.execute(conn, "create table test_1(id int, foo string)")
       insert_1 = MonetDB.execute(conn, "INSERT INTO test_1 VALUES(1, \'I am foo\')")
       insert_2 = MonetDB.execute(conn, "INSERT INTO test_1 VALUES(2, \'You are bar\')")
       insert_3 = MonetDB.execute(conn, "INSERT INTO test_1 VALUES(3, \'We are foobar\')")
@@ -43,5 +43,25 @@ Test.@testset "execute" begin
 
       Test.@test expected == actual
    end
+
+   Test.@testset "transaction" begin
+      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+
+      MonetDB.execute(conn, "create table test_2(id int, foo string)")
+
+      MonetDB.transaction(conn) do 
+         MonetDB.execute(conn, "INSERT INTO test_2 VALUES (1, 'foo')")
+         MonetDB.execute(conn, "INSERT INTO test_2 VALUES (2, 'bar')")
+         MonetDB.execute(conn, "INSERT INTO test_2 VALUES (3, 'baz')")
+      end
+
+      expected = DataFrame(id=[1,2,3], foo=["\"foo\"", "\"bar\"", "\"baz\""])
+      actual = MonetDB.execute(conn, "SELECT * FROM test_2")
+
+      Test.@test expected == actual
+
+      MonetDB.execute(conn, "DROP TABLE test_2")
+   end
+
 
 end
