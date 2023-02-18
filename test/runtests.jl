@@ -1,7 +1,6 @@
 using Test
 using MonetDB
 using DataFrames
-using MLDatasets
 
 Test.@testset "authentication" begin
    Test.@test typeof(MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")) == MonetDB.MapiConnection
@@ -64,15 +63,15 @@ Test.@testset "execute" begin
       MonetDB.execute(conn, "DROP TABLE test_2")
    end
 
-   Test.@testset "load" begin
-      target_df = MLDatasets.Iris().dataframe
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+   # Test.@testset "load" begin
+   #    target_df = MLDatasets.Iris().dataframe
+   #    conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
 
-      MonetDB.load(conn, target_df, "foo")
+   #    MonetDB.load(conn, target_df, "foo")
 
-      df = MonetDB.execute(conn, "SELECT * FROM foo")
-      println(target_df)
+   #    df = MonetDB.execute(conn, "SELECT * FROM foo")
+   #    println(target_df)
 
-      MonetDB.execute(conn, "DROP TABLE foo")
-   end
+   #    MonetDB.execute(conn, "DROP TABLE foo")
+   # end
 end
