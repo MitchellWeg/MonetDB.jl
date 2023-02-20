@@ -65,13 +65,14 @@ Test.@testset "execute" begin
    end
 
    Test.@testset "load" begin
-      target_df = MLDatasets.Iris().dataframe
+      target_df = DataFrame(a = 1:150, b = rand(150))
+
       conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
 
       MonetDB.load(conn, target_df, "foo")
 
       df = MonetDB.execute(conn, "SELECT * FROM foo")
-      println(target_df)
+      println(df)
 
       MonetDB.execute(conn, "DROP TABLE foo")
    end
