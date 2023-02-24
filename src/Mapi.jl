@@ -83,16 +83,16 @@ function get_block(conn)
         byte_count = header >> 1
         is_last = Bool(header & 1)
 
-        raw_bytes = get_bytes(conn, byte_count)
-        raw_data = String(raw_bytes)
+        raw_data = get_bytes(conn, byte_count)
         push!(data, raw_data)
     end
 
     return data
 end
 
-function get_bytes(conn, limit)
+
+function get_bytes(conn, limit)::String
     raw_data = read(conn.socket, limit)
 
-    return raw_data
+    return String(raw_data)
 end
