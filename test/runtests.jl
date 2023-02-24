@@ -1,7 +1,6 @@
 using Test
 using MonetDB
 using DataFrames
-using MLDatasets
 
 Test.@testset "authentication" begin
    Test.@test typeof(MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")) == MonetDB.MapiConnection
