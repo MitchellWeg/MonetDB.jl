@@ -11,6 +11,10 @@ function monetize(data, types)
 end
 
 function determine_type(data, type)
+    if data == "NULL"
+        return missing
+    end
+
     if type in ["decimal", "double"]
         return parse(Float64, data)
     end

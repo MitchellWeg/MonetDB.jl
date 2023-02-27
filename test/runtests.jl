@@ -77,4 +77,17 @@ Test.@testset "execute" begin
 
       MonetDB.execute(conn, "DROP TABLE foo")
    end
+
+   Test.@testset "load with missing values" begin
+      _b = [1,2,3,missing,5]
+      target_df = DataFrame(a = 1:5, b = _b, c = ["1", "2", "3", "4", "5"])
+
+      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+
+      MonetDB.load(conn, target_df, "missing_values_test")
+
+      df = MonetDB.execute(conn, "SELECT * FROM missing_values_test")
+      
+      MonetDB.execute(conn, "DROP TABLE missing_values_test")
+   end
 end
