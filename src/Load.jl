@@ -4,7 +4,11 @@ function determine_execute_query(table_name, row)
     q = "insert into $table_name values("
 
     for (i, col) in enumerate(row)
-        q = q * "'$col'"
+        if col === missing
+            q = q * "NULL"
+        else
+            q = q * "'$col'"
+        end
 
         if i == length(row)
             q = q * ")"
@@ -39,6 +43,13 @@ function determine_create_table_query(table_name, col_names, col_types)
 end
 
 function get_type(type)
+    
+    # Column contains missing values
+    if typeof(type) == Union
+        type = type.b
+    end
+
+
     if type == Float64 || type == Float32 || type == Float16
         return "float"
     end
