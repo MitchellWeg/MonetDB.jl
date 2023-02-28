@@ -25,10 +25,10 @@ function determine_create_table_query(table_name, col_names, col_types)
     @assert length(col_names) == length(col_types)
 
     # TODO: table_name here must be sanitized!
-    suffix = "create table $table_name("
+    suffix = "create table \"$table_name\"("
 
     for (i, name) in enumerate(col_names)
-        latter = "$name $(get_type(col_types[i]))"
+        latter = "\"$name\" $(get_type(col_types[i]))"
         suffix = suffix * latter
 
         if i == length(col_names)

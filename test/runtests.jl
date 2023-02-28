@@ -8,6 +8,23 @@ Test.@testset "authentication" begin
    Test.@test_throws "!InvalidCredentialsException" MonetDB.connect("localhost", 50000, "monetdb", "monetdba", "demo") 
 end
 
+Test.@testset "determine query's" begin
+   # TODO: This testset needs a lot more work.
+   # the column names needs to be more sanitized.
+
+   Test.@testset "simple example" begin
+      q = MonetDB.determine_create_table_query("foo", ["bar"], [Int])
+
+      Test.@test q == "create table \"foo\"(\"bar\" int)"
+   end
+
+   Test.@testset "example with SQL keyword" begin
+      q = MonetDB.determine_create_table_query("foo", ["time", "position"], [Int, Int])
+
+      Test.@test q == "create table \"foo\"(\"time\" int, \"position\" int)"
+   end
+
+end
 
 Test.@testset "execute" begin
 
@@ -80,14 +97,14 @@ Test.@testset "execute" begin
 
    Test.@testset "load with missing values" begin
       _b = [1,2,3,missing,5]
-      target_df = DataFrame(a = 1:5, b = _b, c = ["1", "2", "3", "4", "5"])
+      target_df = DataFrame(a = 1:5, b = _b, c = ["1", "2", "3", "4", "5"], d = [1.0, 2.0, 3.0, missing, missing])
 
       conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
 
       MonetDB.load(conn, target_df, "missing_values_test")
 
       df = MonetDB.execute(conn, "SELECT * FROM missing_values_test")
-      
+
       MonetDB.execute(conn, "DROP TABLE missing_values_test")
    end
 end
