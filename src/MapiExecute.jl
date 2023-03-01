@@ -88,6 +88,12 @@ function parse_data_response(column_types, column_names, data_raw)::DataFrame
     data = monetize(data, column_types)
     data = reduce(vcat, data)
 
+    # This is a very dirty hack,
+    # and thus should be rewritten.
+    if isa(data, Array) == false
+        data = [data]
+    end
+
     mdata = permutedims(reshape(data, length(column_names), :))
     df = DataFrame(mdata, column_names)
 
