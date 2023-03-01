@@ -1,6 +1,7 @@
 module MonetDB
 include("Mapi.jl")
 include("Load.jl")
+include("Prepare.jl")
 include("MapiExecute.jl")
 
 """
@@ -17,6 +18,14 @@ Executes a statement.
 function execute(conn, cmd)
     return mapi_execute(conn, cmd)
 end
+
+"""
+Executes a prepared statement.
+"""
+function execute(conn, prepared_statement::MonetDBPreparedStatement, args)
+    return mapi_execute(conn, prepared_statement, args)
+end
+
 
 """
 Load a DataFrame into a table.

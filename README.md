@@ -28,6 +28,16 @@ MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
 MonetDB.load(conn, my_df, "my_table")
 ```
 
+### Prepared statements
+
+```julia
+MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+
+prepared_statement = MonetDB.prepare(conn, "SELECT id, foo, bar FROM my_table WHERE bar = ?")
+
+df = MonetDB.execute(conn, prepared_statement, ["there"])
+```
+
 ### Transaction
 
 Additionally, a transaction can also be started:

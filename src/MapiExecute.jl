@@ -57,6 +57,26 @@ function mapi_execute(conn, stmt)::DataFrame
 end
 
 """
+Mapi execute routine with a prepared statement
+"""
+function mapi_execute(conn, prep::MonetDBPreparedStatement, args)::DataFrame
+    @assert length(args) > 0
+
+    df = DataFrame()
+    _args = []
+
+    for arg in args
+       s = "'$arg'" 
+       push!(_args, s)
+    end
+
+    v = join(_args, ',')
+
+    stmt = "EXECUTE $(prep.id)($v)"
+
+    return mapi_execute(conn, stmt)
+end
+"""
 We got a data response, denoted by the header, which indicated by setting a '&1' in the first couple of bytes.
 This function parses the response got from the server,
 and returns a dataframe with the data.
@@ -92,7 +112,12 @@ We got a non data response, denoted by the header, which didn't set it as '&1'.
 This function creates a DataFrame from the metadata retrieved from the server.
 """
 function parse_non_data_response(resp)::DataFrame
-    df = DataFrame()
+    header = split(resp[1], '\n')[1]
+    header_split = split(header, ' ')
+
+    c = collect(header_split[2:end])
+
+    df = DataFrame(metadata=c)
 
     return df
 end
