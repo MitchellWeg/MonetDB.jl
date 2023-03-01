@@ -84,17 +84,29 @@ Test.@testset "execute" begin
       MonetDB.execute(conn, "DROP TABLE missing_values_test")
    end
 
-   Test.@testset "prepare" begin
+   Test.@testset "prepare with args" begin
       conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
 
-      table_name = "test_prepare"
+      table_name = "test_prepare_args"
       MonetDB.execute(conn, "CREATE TABLE $table_name(id INT, foo STRING, bar STRING)")
       MonetDB.execute(conn, "INSERT INTO $table_name VALUES (1, 'foo', 'bar')")
       MonetDB.execute(conn, "INSERT INTO $table_name VALUES (2, 'hello', 'there')")
-      MonetDB.execute(conn, "INSERT INTO $table_name VALUES (2, 'good', 'bye')")
+      MonetDB.execute(conn, "INSERT INTO $table_name VALUES (3, 'good', 'bye')")
+      MonetDB.execute(conn, "INSERT INTO $table_name VALUES (4, 'bye', 'there')")
+      MonetDB.execute(conn, "INSERT INTO $table_name VALUES (5, 'over', 'there')")
 
-      prep = MonetDB.prepare(conn, "SELECT id, foo, bar FROM $table_name WHERE bar = 'there'")
+      prep = MonetDB.prepare(conn, "SELECT id, foo, bar FROM $table_name WHERE bar = ?")
+
+      df = MonetDB.execute(conn, prep, ["there"])
+
+      prep2 = MonetDB.prepare(conn, "SELECT id, foo, bar FROM $table_name WHERE id = ?")
+
+      df2 = MonetDB.execute(conn, prep2, [1])
+
+      Test.@test nrow(df) == 3
+      Test.@test nrow(df2) == 1
 
       MonetDB.execute(conn, "DROP TABLE $table_name")
    end
+
 end
