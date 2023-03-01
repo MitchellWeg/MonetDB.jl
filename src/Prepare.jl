@@ -19,3 +19,11 @@ function prepare(conn, cmd)::MonetDBPreparedStatement
 
     return prep
 end
+
+"""
+Deallocates a prepared statement
+"""
+function deallocate(conn, prep::MonetDBPreparedStatement)
+    q = "DEALLOCATE $(prep.id)"
+    mapi_execute(conn, q)
+end

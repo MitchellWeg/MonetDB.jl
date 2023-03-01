@@ -103,8 +103,17 @@ Test.@testset "execute" begin
 
       df2 = MonetDB.execute(conn, prep2, [1])
 
+      prep3 = MonetDB.prepare(conn, "SELECT id, foo, bar FROM $table_name WHERE foo = ? AND bar = ?")
+
+      df3 = MonetDB.execute(conn, prep3, ["hello", "there"])
+
       Test.@test nrow(df) == 3
       Test.@test nrow(df2) == 1
+      Test.@test nrow(df3) == 1
+
+      MonetDB.deallocate(conn, prep)
+      MonetDB.deallocate(conn, prep2)
+      MonetDB.deallocate(conn, prep3)
 
       MonetDB.execute(conn, "DROP TABLE $table_name")
    end
