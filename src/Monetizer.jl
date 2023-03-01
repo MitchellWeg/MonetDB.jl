@@ -28,3 +28,7 @@ function determine_type(data, type)
     throw("Unknown type $type for value $data")
     return ""
 end
+
+function monet_escape(data::String)
+    return replace(data, "'" => "\\'")
+end

@@ -118,4 +118,16 @@ Test.@testset "execute" begin
       MonetDB.execute(conn, "DROP TABLE $table_name")
    end
 
+   Test.@testset "annoying chars" begin
+      target_df = DataFrame(a = ["I have a tick'"])
+
+      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+
+      MonetDB.load(conn, target_df, "annoying_chars")
+
+      df = MonetDB.execute(conn, "SELECT * FROM annoying_chars")
+
+      MonetDB.execute(conn, "DROP TABLE annoying_chars")
+   end
+
 end

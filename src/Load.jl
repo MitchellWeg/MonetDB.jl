@@ -7,6 +7,9 @@ function determine_execute_query(table_name, row)
         if col === missing
             q = q * "NULL"
         else
+            if typeof(col) === String
+                col = monet_escape(col)
+            end
             q = q * "'$col'"
         end
 
