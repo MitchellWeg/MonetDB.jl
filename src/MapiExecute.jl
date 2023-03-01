@@ -92,7 +92,12 @@ We got a non data response, denoted by the header, which didn't set it as '&1'.
 This function creates a DataFrame from the metadata retrieved from the server.
 """
 function parse_non_data_response(resp)::DataFrame
-    df = DataFrame()
+    header = split(resp[1], '\n')[1]
+    header_split = split(header, ' ')
+
+    c = collect(header_split[2:end])
+
+    df = DataFrame(metadata=c)
 
     return df
 end
