@@ -83,4 +83,18 @@ Test.@testset "execute" begin
 
       MonetDB.execute(conn, "DROP TABLE missing_values_test")
    end
+
+   Test.@testset "prepare" begin
+      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+
+      table_name = "test_prepare"
+      MonetDB.execute(conn, "CREATE TABLE $table_name(id INT, foo STRING, bar STRING)")
+      MonetDB.execute(conn, "INSERT INTO $table_name VALUES (1, 'foo', 'bar')")
+      MonetDB.execute(conn, "INSERT INTO $table_name VALUES (2, 'hello', 'there')")
+      MonetDB.execute(conn, "INSERT INTO $table_name VALUES (2, 'good', 'bye')")
+
+      prep = MonetDB.prepare(conn, "SELECT id, foo, bar FROM $table_name WHERE bar = 'there'")
+
+      MonetDB.execute(conn, "DROP TABLE $table_name")
+   end
 end
