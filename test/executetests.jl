@@ -2,10 +2,12 @@ using Test
 using MonetDB
 using DataFrames
 
+host = "127.0.0.1"
+
 Test.@testset "execute" begin
 
    Test.@testset "simple example" begin
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
       expected = DataFrame(foo=[1], bar=[2])
       actual = MonetDB.execute(conn, "SELECT 1 AS \"foo\",2 AS \"bar\"")
       
@@ -13,7 +15,7 @@ Test.@testset "execute" begin
    end
 
    Test.@testset "more execute" begin
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
 
       create_1 = MonetDB.execute(conn, "create table test_1(id int, foo string)")
       insert_1 = MonetDB.execute(conn, "INSERT INTO test_1 VALUES(1, \'I am foo\')")
@@ -30,7 +32,7 @@ Test.@testset "execute" begin
 
 
    Test.@testset "other execute types" begin
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
       expected = DataFrame(foo=[1.0], bar=[2.5])
       actual = MonetDB.execute(conn, "SELECT 1.0 AS \"foo\",2.5 AS \"bar\"")
 
@@ -38,7 +40,7 @@ Test.@testset "execute" begin
    end
 
    Test.@testset "transaction" begin
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
 
       MonetDB.execute(conn, "create table test_2(id int, foo string)")
 
@@ -59,7 +61,7 @@ Test.@testset "execute" begin
    Test.@testset "load" begin
       target_df = DataFrame(a = 1:150, b = rand(150))
 
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
 
       MonetDB.load(conn, target_df, "foo")
 
@@ -75,7 +77,7 @@ Test.@testset "execute" begin
       _b = [1,2,3,missing,5]
       target_df = DataFrame(a = 1:5, b = _b, c = ["1", "2", "3", "4", "5"], d = [1.0, 2.0, 3.0, missing, missing])
 
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
 
       MonetDB.load(conn, target_df, "missing_values_test")
 
@@ -85,7 +87,7 @@ Test.@testset "execute" begin
    end
 
    Test.@testset "prepare with args" begin
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
 
       table_name = "test_prepare_args"
       MonetDB.execute(conn, "CREATE TABLE $table_name(id INT, foo STRING, bar STRING)")
@@ -121,7 +123,7 @@ Test.@testset "execute" begin
    Test.@testset "annoying chars" begin
       target_df = DataFrame(a = ["I have a tick'"])
 
-      conn = MonetDB.connect("localhost", 50000, "monetdb", "monetdb", "demo")
+      conn = MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")
 
       MonetDB.load(conn, target_df, "annoying_chars")
 
