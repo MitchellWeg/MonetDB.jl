@@ -16,4 +16,4 @@ jobs:
       - uses: julia-actions/setup-julia@v1
       
       - name: Run Tests
-        run: JULIA_HOST_ENV=monetdb && julia --project=. -e "using Pkg; Pkg.test(\"MonetDB\")"
+        run: JULIA_HOST_ENV=monetdb/monetdb && julia --project=. -e "using Pkg; Pkg.test(\"MonetDB\")"
