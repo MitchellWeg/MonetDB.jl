@@ -8,6 +8,7 @@ jobs:
     services:
       monetdb:
         image: monetdb/monetdb
+        container_name: monetdb
         ports: 
           - 50000:50000
 
@@ -17,5 +18,5 @@ jobs:
       
       - name: Run Tests
         run: |
-          export HOST_ENV="monetdb/monetdb"
+          export HOST_ENV="monetdb"
           julia --project=. -e "using Pkg; Pkg.test(\"MonetDB\")"
