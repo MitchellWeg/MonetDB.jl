@@ -8,6 +8,7 @@ jobs:
     services:
       monetdb:
         image: monetdb/monetdb
+        alias: localhost
         ports: 
           - 50000:50000
 
