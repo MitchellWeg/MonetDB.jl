@@ -1,7 +1,7 @@
 using Test
 using MonetDB
 
-host = "127.0.0.1"
+include("constants.jl")
 
 Test.@testset "authentication" begin
    Test.@test typeof(MonetDB.connect(host, 50000, "monetdb", "monetdb", "demo")) == MonetDB.MapiConnection

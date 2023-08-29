@@ -2,7 +2,7 @@ using Test
 using MonetDB
 using DataFrames
 
-host = "127.0.0.1"
+include("constants.jl")
 
 Test.@testset "execute" begin
 

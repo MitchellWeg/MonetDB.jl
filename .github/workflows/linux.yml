@@ -8,7 +8,6 @@ jobs:
     services:
       monetdb:
         image: monetdb/monetdb
-        alias: localhost
         ports: 
           - 50000:50000
 
@@ -17,4 +16,4 @@ jobs:
       - uses: julia-actions/setup-julia@v1
       
       - name: Run Tests
-        run: sleep 10 && julia --project=. -e "using Pkg; Pkg.test(\"MonetDB\")"
+        run: JULIA_HOST_ENV=monetdb && julia --project=. -e "using Pkg; Pkg.test(\"MonetDB\")"
