@@ -1,4 +1,3 @@
-include("Mapi.jl")
 
 struct MonetDBPreparedStatement
     id::Int
@@ -14,7 +13,7 @@ function prepare(conn, cmd)::MonetDBPreparedStatement
 
     r = mapi_execute(conn, q)
 
-    id = parse(Int, r[1,1])
+    id = parse(Int, r[1, 1])
     prep = MonetDBPreparedStatement(id, q)
 
     return prep
