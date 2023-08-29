@@ -8,7 +8,6 @@ jobs:
     services:
       monetdb:
         image: monetdb/monetdb
-        container_name: monetdb
         ports: 
           - 50000:50000
 
