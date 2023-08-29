@@ -5,3 +5,7 @@ host_var = "JULIA_HOST_ENV"
 if host_var in keys(ENV)
     host = ENV[host_var]
 end
+
+print("===")
+print("hostname: $host")
+print("===")
