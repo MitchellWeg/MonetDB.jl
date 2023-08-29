@@ -17,5 +17,5 @@ jobs:
       
       - name: Run Tests
         run: |
-          export HOST_ENV="monetdb"
+          export HOST_ENV="monetdb/monetdb"
           julia --project=. -e "using Pkg; Pkg.test(\"MonetDB\")"
