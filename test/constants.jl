@@ -1,11 +1,13 @@
-host = "127.0.0.1"
 
-host_var = "JULIA_HOST_ENV"
+host_var = "HOST_ENV"
 
 if host_var in keys(ENV)
     host = ENV[host_var]
+else
+    host = "127.0.0.1"
 end
 
-print("===")
-print("hostname: $host")
-print("===")
+
+println("===")
+println("hostname: $host")
+println("===")
