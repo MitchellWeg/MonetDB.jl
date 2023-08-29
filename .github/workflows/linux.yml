@@ -5,11 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      monetdb:
-        image: monetdb/monetdb
-        ports: 
-          - 50000:50000
+    container: monetdb/monetdb
+
     steps:
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
