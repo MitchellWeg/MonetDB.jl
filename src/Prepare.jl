@@ -1,5 +1,3 @@
-include("Mapi.jl")
-
 struct MonetDBPreparedStatement
     id::Int
     query::String
